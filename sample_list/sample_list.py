@@ -5,11 +5,11 @@ import xml.etree.ElementTree as ET
 
 class SampleList:
     def __init__(self):
-        fname    = ""
-        samples  = []
-        vst      = []
-        vsti     = []
-        
+        self.fname    = ""
+        self.samples  = []
+        self.vst      = []
+        self.vsti     = []
+
 
 def read_xrns(fname):
     xfile = ""
@@ -19,20 +19,24 @@ def read_xrns(fname):
 
     root = ET.fromstring(xfile)
     sample_obj = SampleList()
+    sample_obj.fname = fname
 
     for c in root[2].findall('Instrument'):
+        # samples
         d = c.find('SampleGenerator').findall('Samples')
-        if len(d) > 0:
-            for e in d:
-                f = e.findall('Sample')
-                print(f)
+        for e in d:
+            f = e.findall('Sample')
+            sample_names = [g.find('Name').text for g in f]
+            sample_obj.samples.append(sample_names)
 
+    return sample_obj
 
 
 def main():
-    fname = "test/tester.xrns"
+    # TODO parse cmd line
     fname = "test/cc.xrns"
-    read_xrns(fname)
+    r = read_xrns(fname)
+    pass
 
 if __name__ == "__main__":
     main()
