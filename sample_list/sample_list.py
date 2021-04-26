@@ -20,12 +20,18 @@ def read_xrns(fname):
     root = ET.fromstring(xfile)
     sample_obj = SampleList()
 
-    for c in root:
-        print(c.tag)
+    for c in root[2].findall('Instrument'):
+        d = c.find('SampleGenerator').findall('Samples')
+        if len(d) > 0:
+            for e in d:
+                f = e.findall('Sample')
+                print(f)
+
 
 
 def main():
     fname = "test/tester.xrns"
+    fname = "test/cc.xrns"
     read_xrns(fname)
 
 if __name__ == "__main__":
