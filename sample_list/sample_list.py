@@ -32,8 +32,8 @@ def read_xrns(fname):
         # vsti
         vsti = c.find('PluginGenerator').find('PluginDevice')
         if vsti:
-            name = vsti.find('PluginDisplayName')
-        print(vsti)
+            name = vsti.find('PluginDisplayName').text
+            sample_obj.vsti.append(name)
 
     return sample_obj
 
