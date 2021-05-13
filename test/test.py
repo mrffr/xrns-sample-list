@@ -18,7 +18,7 @@ class TestSampleList(unittest.TestCase):
         ll = sl.read_xrns("test/tester.xrns")
         self.assertEqual(ll.fname, "test/tester.xrns")
         self.assertNotEqual(len(ll.samples), 0)
-        self.assertNotEqual(len(ll.vsti), 0)
+        self.assertEqual(len(ll.vsti), 2)
         self.assertEqual(len(ll.vst), 0)
 
 if __name__ == "__main__":
