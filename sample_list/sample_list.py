@@ -29,6 +29,12 @@ def read_xrns(fname):
             sample_names = [g.find('Name').text for g in f]
             sample_obj.samples.append(sample_names)
 
+        # vsti
+        vsti = c.find('PluginGenerator').find('PluginDevice')
+        if vsti:
+            name = vsti.find('PluginDisplayName')
+        print(vsti)
+
     return sample_obj
 
 
