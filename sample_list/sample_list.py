@@ -33,14 +33,16 @@ def read_xrns(fname):
         vsti = c.find('PluginGenerator').find('PluginDevice')
         if vsti:
             name = vsti.find('PluginDisplayName').text
-            sample_obj.vsti.append(name)
+            chunk = vsti.find('ParameterChunk').text
+            oo = (name,chunk)
+            sample_obj.vsti.append(oo)
 
     return sample_obj
 
 
 def main():
     # TODO parse cmd line
-    fname = "test/cc.xrns"
+    fname = "test/dup_vsti.xrns"
     r = read_xrns(fname)
     pass
 
