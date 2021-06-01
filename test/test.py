@@ -17,7 +17,7 @@ class TestSampleList(unittest.TestCase):
     def test_read_xrns_file(self):
         ll = sl.read_xrns("test/tester.xrns")
         self.assertEqual(ll.fname, "test/tester.xrns")
-        self.assertNotEqual(len(ll.samples), 0)
+        self.assertEqual(len(ll.samples), 4)
         self.assertEqual(len(ll.vsti), 2)
         self.assertEqual(len(ll.vst), 0)
 
