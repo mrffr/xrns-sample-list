@@ -21,14 +21,8 @@ def read_xrns(fname):
     sample_obj = SampleList()
     sample_obj.fname = fname
 
+    # vsti
     for c in root[2].findall('Instrument'):
-        # samples
-        d = c.find('SampleGenerator').findall('Samples')
-        for e in d:
-            f = e.findall('Sample')
-            sample_names = [g.find('Name').text for g in f]
-            sample_obj.samples.append(sample_names)
-
         # vsti
         vsti = c.find('PluginGenerator').find('PluginDevice')
         if vsti:
@@ -37,13 +31,19 @@ def read_xrns(fname):
             oo = (name,chunk)
             sample_obj.vsti.append(oo)
 
+    # samples taken from zip itself to calculate hashes
+    with zipfile.ZipFile(fname) as xrns:
+        for f in xrns.filelist[1:]:
+            samp_name = f.filename()
+
     return sample_obj
 
 
 def main():
     # TODO parse cmd line
-    fname = "test/dup_vsti.xrns"
+    fname = "test/tester.xrns"
     r = read_xrns(fname)
+    print(r.samples)
     pass
 
 if __name__ == "__main__":
