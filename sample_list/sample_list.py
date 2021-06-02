@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
 import zipfile
+import hashlib
 import xml.etree.ElementTree as ET
 
 class SampleList:
     def __init__(self):
         self.fname    = ""
-        self.samples  = []
+        self.sample_name  = []
+        self.sample_hash = []
         self.vst      = []
-        self.vsti     = []
-
+        self.vsti_name     = []
+        self.vsti_chunk     = []
 
 def read_xrns(fname):
     xfile = ""
@@ -28,13 +30,27 @@ def read_xrns(fname):
         if vsti:
             name = vsti.find('PluginDisplayName').text
             chunk = vsti.find('ParameterChunk').text
-            oo = (name,chunk)
-            sample_obj.vsti.append(oo)
+            sample_obj.vsti_name.append(name)
+            sample_obj.vsti_chunk.append(chunk)
 
     # samples taken from zip itself to calculate hashes
     with zipfile.ZipFile(fname) as xrns:
         for f in xrns.filelist[1:]:
-            samp_name = f.filename()
+            samp_name = f.filename
+            # calc hash
+            raw = xrns.open(f.filename)
+            block_size = 65536
+            hh = hashlib.sha256()
+            fb = raw.read(block_size)
+            while len(fb) > 0:
+                hh.update(fb)
+                fb = raw.read(block_size)
+            digest = hh.hexdigest()
+
+            # store info
+            sample_obj.sample_name.append(samp_name)
+            sample_obj.sample_hash.append(digest)
+
 
     return sample_obj
 
