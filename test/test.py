@@ -24,13 +24,13 @@ class TestSampleList(unittest.TestCase):
     def test_duplicate_samples_one(self):
         ll = sl.read_xrns("test/tester.xrns")
         lp = sl.read_xrns("test/tester.xrns")
-        dups = get_duplicates(ll, lp)
+        dups = sl.get_duplicate_samples(ll, lp)
         self.assertEqual(len(dups), 4)
 
     def test_duplicate_samples_two(self):
         ll = sl.read_xrns("test/cc.xrns")
         lp = sl.read_xrns("test/tester.xrns")
-        dups = get_duplicates(ll, lp)
+        dups = sl.get_duplicate_samples(ll, lp)
         self.assertEqual(len(dups), 0)
 
 
