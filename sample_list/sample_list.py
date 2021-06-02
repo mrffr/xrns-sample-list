@@ -51,9 +51,19 @@ def read_xrns(fname):
             sample_obj.sample_name.append(samp_name)
             sample_obj.sample_hash.append(digest)
 
-
     return sample_obj
 
+def get_duplicate_samples(a, b):
+    """
+    return samples that are present in both a and b SampleList objects
+    """
+    results = []
+    for i in range(len(a.sample_hash)):
+        for j in range(len(b.sample_hash)):
+            if a.sample_hash[i] == b.sample_hash[j]:
+                match = (a.sample_name[i], b.sample_name[j])
+                results.append(match)
+    return results
 
 def main():
     # TODO parse cmd line
