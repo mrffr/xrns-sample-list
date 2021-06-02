@@ -10,16 +10,19 @@ class TestSampleList(unittest.TestCase):
     def test_read_empty_xrns_file(self):
         ll = sl.read_xrns("test/cc.xrns")
         self.assertEqual(ll.fname, "test/cc.xrns")
-        self.assertEqual(len(ll.vsti), 0)
+        self.assertEqual(len(ll.vsti_name), 0)
         self.assertEqual(len(ll.vst), 0)
-        self.assertEqual(len(ll.samples), 0)
+        self.assertEqual(len(ll.sample_name), 0)
 
     def test_read_xrns_file(self):
         ll = sl.read_xrns("test/tester.xrns")
         self.assertEqual(ll.fname, "test/tester.xrns")
-        self.assertEqual(len(ll.samples), 4)
-        self.assertEqual(len(ll.vsti), 2)
+        self.assertEqual(len(ll.sample_name), 4)
+        self.assertEqual(len(ll.vsti_name), 2)
         self.assertEqual(len(ll.vst), 0)
+
+    def test_duplicate_samples(self):
+        ll = sl.read_xrns("test/tester.xrns")
 
 if __name__ == "__main__":
     unittest.main()
