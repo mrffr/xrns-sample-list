@@ -21,13 +21,13 @@ class TestSampleList(unittest.TestCase):
         self.assertEqual(len(ll.vsti_name), 2)
         self.assertEqual(len(ll.vst), 0)
 
-    def test_duplicate_samples_one(self):
+    def test_duplicate_samples_present(self):
         ll = sl.read_xrns("test/tester.xrns")
         lp = sl.read_xrns("test/tester.xrns")
         dups = sl.get_duplicate_samples(ll, lp)
         self.assertEqual(len(dups), 4)
 
-    def test_duplicate_samples_two(self):
+    def test_duplicate_samples_not_present(self):
         ll = sl.read_xrns("test/cc.xrns")
         lp = sl.read_xrns("test/tester.xrns")
         dups = sl.get_duplicate_samples(ll, lp)
