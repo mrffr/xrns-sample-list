@@ -3,6 +3,7 @@
 import zipfile
 import hashlib
 import xml.etree.ElementTree as ET
+import argparse
 
 class SampleList:
     def __init__(self):
@@ -66,10 +67,11 @@ def get_duplicate_samples(a, b):
     return results
 
 def main():
-    # TODO parse cmd line
-    fname = "test/tester.xrns"
-    r = read_xrns(fname)
-    print(r.samples)
+    parser = argparse.ArgumentParser(description='XRNS information tool.')
+    parser.add_argument('filename',type=str)
+    args = parser.parse_args()
+    r = read_xrns(args.filename)
+    print(r.sample_name)
     pass
 
 if __name__ == "__main__":
