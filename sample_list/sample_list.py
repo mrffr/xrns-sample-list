@@ -68,10 +68,27 @@ def get_duplicate_samples(a, b):
 
 def main():
     parser = argparse.ArgumentParser(description='XRNS information tool.')
-    parser.add_argument('filename',type=str)
+    parser.add_argument('file', 
+            type=str, 
+            nargs='+')
+    parser.add_argument('--cmp', 
+            dest='compare',
+            help='Compare XRNS information between files.',
+            action='store_true')
     args = parser.parse_args()
-    r = read_xrns(args.filename)
-    print(r.sample_name)
+
+    # first get info for files
+    sl = []
+    for f in args.file:
+        r = read_xrns(f)
+        sl.append(r)
+
+    #handle switches
+    if args.compare:
+        pass
+    else:
+        for f in sl:
+            print(f.sample_name)
     pass
 
 if __name__ == "__main__":
