@@ -33,6 +33,19 @@ class TestSampleList(unittest.TestCase):
         dups = sl.get_duplicate_samples(ll, lp)
         self.assertEqual(len(dups), 0)
 
+    def test_duplicate_vsti_present(self):
+        ll = sl.read_xrns("test/tester.xrns")
+        lp = sl.read_xrns("test/tester.xrns")
+        dups = sl.get_duplicate_vsti(ll, lp)
+        self.assertEqual(len(dups), 4)
+
+    def test_duplicate_vsti_not_present(self):
+        ll = sl.read_xrns("test/cc.xrns")
+        lp = sl.read_xrns("test/tester.xrns")
+        dups = sl.get_duplicate_vsti(ll, lp)
+        self.assertEqual(len(dups), 0)
+
+
 
 if __name__ == "__main__":
     unittest.main()

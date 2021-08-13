@@ -66,6 +66,18 @@ def get_duplicate_samples(a, b):
                 results.append(match)
     return results
 
+def get_duplicate_vsti(a, b):
+    """
+    return vsti that are present in both a and b SampleList objects
+    """
+    results = []
+    for i in range(len(a.vsti_chunk)):
+        for j in range(len(b.vsti_chunk)):
+            if a.vsti_chunk[i] == b.sample_hash[j]:
+                match = (a.vsti_name[i], b.vsti_name[j])
+                results.append(match)
+    return results
+
 def main():
     parser = argparse.ArgumentParser(description='XRNS information tool.')
     parser.add_argument('file', 
