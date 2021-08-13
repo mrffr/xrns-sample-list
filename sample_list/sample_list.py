@@ -73,7 +73,7 @@ def get_duplicate_vsti(a, b):
     results = []
     for i in range(len(a.vsti_chunk)):
         for j in range(len(b.vsti_chunk)):
-            if a.vsti_chunk[i] == b.sample_hash[j]:
+            if a.vsti_chunk[i] == b.vsti_chunk[j]:
                 match = (a.vsti_name[i], b.vsti_name[j])
                 results.append(match)
     return results

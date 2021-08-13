@@ -37,7 +37,7 @@ class TestSampleList(unittest.TestCase):
         ll = sl.read_xrns("test/tester.xrns")
         lp = sl.read_xrns("test/tester.xrns")
         dups = sl.get_duplicate_vsti(ll, lp)
-        self.assertEqual(len(dups), 4)
+        self.assertEqual(len(dups), 2)
 
     def test_duplicate_vsti_not_present(self):
         ll = sl.read_xrns("test/cc.xrns")
