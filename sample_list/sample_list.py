@@ -78,6 +78,20 @@ def get_duplicate_vsti(a, b):
                 results.append(match)
     return results
 
+def compare_files(files):
+    if len(files) <= 1:
+        print('Not enough files to compare')
+        return
+
+    for i in range(len(files) - 1):
+        file_a = files[i]
+        for j in range(i + 1, len(files)):
+            file_b = files[j]
+            dup_samp = get_duplicate_samples(file_a, file_b)
+            dup_vsti = get_duplicate_vsti(file_a, file_b)
+
+            print('Comparing {} {}'.format(file_a.fname, file_b.fname))
+
 def main():
     parser = argparse.ArgumentParser(description='XRNS information tool.')
     parser.add_argument('file', 
@@ -97,11 +111,10 @@ def main():
 
     #handle switches
     if args.compare:
-        pass
+        compare_files(sl)
     else:
         for f in sl:
             print(f.sample_name)
-    pass
 
 if __name__ == "__main__":
     main()
