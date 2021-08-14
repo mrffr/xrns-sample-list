@@ -92,6 +92,20 @@ def compare_files(files):
 
             print('Comparing {} {}'.format(file_a.fname, file_b.fname))
 
+            if len(dup_samp) == 0:
+                print('No duplicate samples found')
+            else:
+                print('Duplicate samples found')
+                for e in dup_samp:
+                    print('Match:\n{}\n{}'.format(e[0], e[1]))
+
+            if len(dup_vsti) == 0:
+                print('No duplicate vsti found')
+            else:
+                print('Duplicate vsti found')
+                for e in dup_vsti:
+                    print('Match:\n{}\n{}'.format(e[0], e[1]))
+
 def main():
     parser = argparse.ArgumentParser(description='XRNS information tool.')
     parser.add_argument('file', 
