@@ -6,9 +6,9 @@ with open("README.md",'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-        name='',
-        version='',
-        description='',
+        name='xrns-sample-list',
+        version='0.0.1',
+        description='CLI utility to list samples/vsti in xrns files and detect duplicates.',
         long_description=long_description,
         long_description_content_type="text/markdown",
         author='F Fitzgerald',
@@ -21,5 +21,8 @@ setuptools.setup(
             },
 
         packages=['xrns-sample-list'],
-        classifie
-        )
+        classifiers=[
+            'License :: OSI Approved :: MIT License',
+            'Programming Language :: Python :: 3',
+            ],
+    )
