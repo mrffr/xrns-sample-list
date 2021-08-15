@@ -78,33 +78,31 @@ def get_duplicate_vsti(a, b):
                 results.append(match)
     return results
 
-def compare_files(files):
-    if len(files) <= 1:
+def compare_files(sample_ls):
+    if len(sample_ls) <= 1:
         print('Not enough files to compare')
         return
+    
+    def prin_res(duplicates, typ):
+        if len(duplicates) == 0:
+            print('No duplicate {} found'.format(typ))
+        else:
+            print('Duplicate {} found'.format(typ))
+            for e in duplicates:
+                print('Match:\n{}\n{}'.format(e[0], e[1]))
 
-    for i in range(len(files) - 1):
-        file_a = files[i]
-        for j in range(i + 1, len(files)):
-            file_b = files[j]
+    for i in range(len(sample_ls) - 1):
+        file_a = sample_ls[i]
+        for j in range(i + 1, len(sample_ls)):
+            file_b = sample_ls[j]
             dup_samp = get_duplicate_samples(file_a, file_b)
             dup_vsti = get_duplicate_vsti(file_a, file_b)
 
             print('Comparing {} {}'.format(file_a.fname, file_b.fname))
 
-            if len(dup_samp) == 0:
-                print('No duplicate samples found')
-            else:
-                print('Duplicate samples found')
-                for e in dup_samp:
-                    print('Match:\n{}\n{}'.format(e[0], e[1]))
+            prin_res(dup_samp, 'samples')
+            prin_res(dup_vsti, 'vsti')
 
-            if len(dup_vsti) == 0:
-                print('No duplicate vsti found')
-            else:
-                print('Duplicate vsti found')
-                for e in dup_vsti:
-                    print('Match:\n{}\n{}'.format(e[0], e[1]))
 
 def main():
     parser = argparse.ArgumentParser(description='XRNS information tool.')
@@ -118,16 +116,16 @@ def main():
     args = parser.parse_args()
 
     # first get info for files
-    sl = []
+    sample_ls = []
     for f in args.file:
         r = read_xrns(f)
-        sl.append(r)
+        sample_ls.append(r)
 
     #handle switches
     if args.compare:
-        compare_files(sl)
+        compare_files(sample_ls)
     else:
-        for f in sl:
+        for f in sample_ls:
             print(f.sample_name)
 
 if __name__ == "__main__":
