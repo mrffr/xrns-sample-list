@@ -9,5 +9,5 @@ pip install .
 
 # Usage
 ```
-
+xrns-sample-list [-h] [--cmp] file [file ...]
 ```
