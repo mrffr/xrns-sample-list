@@ -27,15 +27,14 @@ def read_xrns(fname):
 
     # vsti
     instrs = root.find('Instruments')
-    if instrs:
-        for c in instrs.findall('Instrument'):
-            # vsti
-            vsti = c.find('PluginGenerator').find('PluginDevice')
-            if vsti:
-                name = vsti.find('PluginDisplayName').text
-                chunk = vsti.find('ParameterChunk').text
-                sample_obj.vsti_name.append(name)
-                sample_obj.vsti_chunk.append(chunk)
+    for c in instrs.findall('Instrument'):
+        # vsti
+        vsti = c.find('PluginGenerator').find('PluginDevice')
+        if vsti:
+            name = vsti.find('PluginDisplayName').text
+            chunk = vsti.find('ParameterChunk').text
+            sample_obj.vsti_name.append(name)
+            sample_obj.vsti_chunk.append(chunk)
 
     # samples taken from zip itself to calculate hashes
     with zipfile.ZipFile(fname) as xrns:
@@ -55,11 +54,11 @@ def read_xrns(fname):
             sample_obj.sample_name.append(samp_name)
             sample_obj.sample_hash.append(digest)
 
-    # vst
+    # vst are located on tracks so iterate through tracks checking devices
     for c in root.find('Tracks'):
         # vst
-        vst = c.find('FilterDevices').find('AudioPluginDevice')
-        if vst:
+        l_vst = c.find('FilterDevices').find('Devices').findall('AudioPluginDevice')
+        for vst in l_vst:
             name = vst.find('PluginDisplayName').text
             chunk = vst.find('ParameterChunk').text
             sample_obj.vst_name.append(name)
@@ -92,6 +91,19 @@ def get_duplicate_vsti(a, b):
                 results.append(match)
     return results
 
+def get_duplicate_vst(a, b):
+    """
+    return vst that are present in both a and b SampleList objects
+    """
+    results = []
+    for i in range(len(a.vst_chunk)):
+        for j in range(len(b.vst_chunk)):
+            if a.vst_chunk[i] == b.vst_chunk[j]:
+                match = (a.vst_name[i], b.vst_name[j])
+                results.append(match)
+    return results
+
+
 def compare_files(sample_ls):
     if len(sample_ls) <= 1:
         print('Not enough files to compare')
@@ -111,11 +123,13 @@ def compare_files(sample_ls):
             file_b = sample_ls[j]
             dup_samp = get_duplicate_samples(file_a, file_b)
             dup_vsti = get_duplicate_vsti(file_a, file_b)
+            dup_vst = get_duplicate_vst(file_a, file_b)
 
             print('Comparing {} {}'.format(file_a.fname, file_b.fname))
 
             prin_res(dup_samp, 'samples')
             prin_res(dup_vsti, 'vsti')
+            prin_res(dup_vst, 'vst')
 
 
 def main():
