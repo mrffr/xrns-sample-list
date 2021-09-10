@@ -10,16 +10,16 @@ class TestSampleList(unittest.TestCase):
     def test_read_empty_xrns_file(self):
         ll = sl.read_xrns("test/cc.xrns")
         self.assertEqual(ll.fname, "test/cc.xrns")
-        self.assertEqual(len(ll.vsti_name), 0)
-        self.assertEqual(len(ll.vst), 0)
         self.assertEqual(len(ll.sample_name), 0)
+        self.assertEqual(len(ll.vsti_name), 0)
+        self.assertEqual(len(ll.vst_name), 0)
 
     def test_read_xrns_file(self):
         ll = sl.read_xrns("test/tester.xrns")
         self.assertEqual(ll.fname, "test/tester.xrns")
         self.assertEqual(len(ll.sample_name), 4)
         self.assertEqual(len(ll.vsti_name), 2)
-        self.assertEqual(len(ll.vst), 0)
+        self.assertEqual(len(ll.vst_name), 0)
 
     def test_duplicate_samples_present(self):
         ll = sl.read_xrns("test/tester.xrns")
@@ -44,6 +44,19 @@ class TestSampleList(unittest.TestCase):
         lp = sl.read_xrns("test/tester.xrns")
         dups = sl.get_duplicate_vsti(ll, lp)
         self.assertEqual(len(dups), 0)
+
+    def test_duplicate_vsti_present(self):
+        ll = sl.read_xrns("test/vst_test.xrns")
+        lp = sl.read_xrns("test/vst_test.xrns")
+        dups = sl.get_duplicate_vst(ll, lp)
+        self.assertEqual(len(dups), 3)
+
+    def test_duplicate_vsti_not_present(self):
+        ll = sl.read_xrns("test/cc.xrns")
+        lp = sl.read_xrns("test/vst_test.xrns")
+        dups = sl.get_duplicate_vst(ll, lp)
+        self.assertEqual(len(dups), 0)
+
 
 
 
