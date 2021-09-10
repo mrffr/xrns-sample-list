@@ -15,27 +15,23 @@ class SampleList:
         self.vsti_name     = []
         self.vsti_chunk     = []
 
-def read_xrns(fname):
-    xfile = ""
-    with zipfile.ZipFile(fname) as xrns:
-        with xrns.open('Song.xml') as song:
-            xfile = song.read()
 
-    root = ET.fromstring(xfile)
-    sample_obj = SampleList()
-    sample_obj.fname = fname
-
-    # vsti
+def get_vsti(root, sample_obj):
     instrs = root.find('Instruments')
     for c in instrs.findall('Instrument'):
         # vsti
-        vsti = c.find('PluginGenerator').find('PluginDevice')
+        vsti = c.find('PluginGenerator')
+        if not vsti:
+            continue
+        vsti = vsti.find('PluginDevice')
         if vsti:
             name = vsti.find('PluginDisplayName').text
             chunk = vsti.find('ParameterChunk').text
             sample_obj.vsti_name.append(name)
             sample_obj.vsti_chunk.append(chunk)
+    return sample_obj
 
+def get_samples(fname, sample_obj):
     # samples taken from zip itself to calculate hashes
     with zipfile.ZipFile(fname) as xrns:
         for f in xrns.filelist[1:]:
@@ -53,7 +49,9 @@ def read_xrns(fname):
             # store info
             sample_obj.sample_name.append(samp_name)
             sample_obj.sample_hash.append(digest)
+    return sample_obj
 
+def get_vst(root, sample_obj):
     # vst are located on tracks so iterate through tracks checking devices
     for c in root.find('Tracks'):
         # vst
@@ -63,6 +61,19 @@ def read_xrns(fname):
             chunk = vst.find('ParameterChunk').text
             sample_obj.vst_name.append(name)
             sample_obj.vst_chunk.append(chunk)
+    return sample_obj
+
+
+def read_xrns(fname, tfilter):
+    xfile = ""
+    with zipfile.ZipFile(fname) as xrns:
+        with xrns.open('Song.xml') as song:
+            xfile = song.read()
+
+    root = ET.fromstring(xfile)
+    sample_obj = SampleList()
+    sample_obj.fname = fname
+
 
 
     return sample_obj
@@ -110,9 +121,7 @@ def compare_files(sample_ls):
         return
     
     def prin_res(duplicates, typ):
-        if len(duplicates) == 0:
-            print('No duplicate {} found'.format(typ))
-        else:
+        if len(duplicates) > 0:
             print('Duplicate {} found'.format(typ))
             for e in duplicates:
                 print('Match:\n{}\n{}'.format(e[0], e[1]))
@@ -125,6 +134,7 @@ def compare_files(sample_ls):
             dup_vsti = get_duplicate_vsti(file_a, file_b)
             dup_vst = get_duplicate_vst(file_a, file_b)
 
+            print('===============')
             print('Comparing {} {}'.format(file_a.fname, file_b.fname))
 
             prin_res(dup_samp, 'samples')
@@ -141,12 +151,16 @@ def main():
             dest='compare',
             help='Compare XRNS information between files.',
             action='store_true')
+    parser.add_argument('--filter',
+            dest='filter',
+            help='Filter to just check certain types. ex. vst vsti samples',
+            nargs='+')
     args = parser.parse_args()
 
     # first get info for files
     sample_ls = []
     for f in args.file:
-        r = read_xrns(f)
+        r = read_xrns(f, args.filter)
         sample_ls.append(r)
 
     #handle switches
@@ -154,6 +168,7 @@ def main():
         compare_files(sample_ls)
     else:
         for f in sample_ls:
+            print('===============')
             print(f.fname)
             print("===== Samples")
             print('\n'.join(f.sample_name))
