@@ -22,6 +22,8 @@ def read_vsti(root, sample_obj):
         # vsti
         vsti = c.find('PluginGenerator')
         if not vsti:
+            vsti = c.find('PluginProperties') #diff format
+        if not vsti:
             continue
         vsti = vsti.find('PluginDevice')
         if vsti:
