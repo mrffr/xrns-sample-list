@@ -27,14 +27,15 @@ def read_xrns(fname):
 
     # vsti
     instrs = root.find('Instruments')
-    for c in instrs.findall('Instrument'):
-        # vsti
-        vsti = c.find('PluginGenerator').find('PluginDevice')
-        if vsti:
-            name = vsti.find('PluginDisplayName').text
-            chunk = vsti.find('ParameterChunk').text
-            sample_obj.vsti_name.append(name)
-            sample_obj.vsti_chunk.append(chunk)
+    if instrs:
+        for c in instrs.findall('Instrument'):
+            # vsti
+            vsti = c.find('PluginGenerator').find('PluginDevice')
+            if vsti:
+                name = vsti.find('PluginDisplayName').text
+                chunk = vsti.find('ParameterChunk').text
+                sample_obj.vsti_name.append(name)
+                sample_obj.vsti_chunk.append(chunk)
 
     # samples taken from zip itself to calculate hashes
     with zipfile.ZipFile(fname) as xrns:
@@ -56,7 +57,6 @@ def read_xrns(fname):
 
     # vst
     for c in root.find('Tracks'):
-        print(c)
         # vst
         vst = c.find('FilterDevices').find('AudioPluginDevice')
         if vst:
