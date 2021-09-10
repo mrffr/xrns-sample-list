@@ -10,7 +10,8 @@ class SampleList:
         self.fname    = ""
         self.sample_name  = []
         self.sample_hash = []
-        self.vst      = []
+        self.vst_name      = []
+        self.vst_chunk      = []
         self.vsti_name     = []
         self.vsti_chunk     = []
 
@@ -126,7 +127,13 @@ def main():
         compare_files(sample_ls)
     else:
         for f in sample_ls:
-            print(f.sample_name)
+            print(f.fname)
+            print("===== Samples")
+            print('\n'.join(f.sample_name))
+            print("===== VSTI")
+            print('\n'.join(f.vsti_name))
+            print("===== VST")
+            print('\n'.join(f.vst_name))
 
 if __name__ == "__main__":
     main()
