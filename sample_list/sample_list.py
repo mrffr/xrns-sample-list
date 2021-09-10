@@ -16,7 +16,7 @@ class SampleList:
         self.vsti_chunk     = []
 
 
-def get_vsti(root, sample_obj):
+def read_vsti(root, sample_obj):
     instrs = root.find('Instruments')
     for c in instrs.findall('Instrument'):
         # vsti
@@ -31,7 +31,7 @@ def get_vsti(root, sample_obj):
             sample_obj.vsti_chunk.append(chunk)
     return sample_obj
 
-def get_samples(fname, sample_obj):
+def read_samples(fname, sample_obj):
     # samples taken from zip itself to calculate hashes
     with zipfile.ZipFile(fname) as xrns:
         for f in xrns.filelist[1:]:
@@ -51,7 +51,7 @@ def get_samples(fname, sample_obj):
             sample_obj.sample_hash.append(digest)
     return sample_obj
 
-def get_vst(root, sample_obj):
+def read_vst(root, sample_obj):
     # vst are located on tracks so iterate through tracks checking devices
     for c in root.find('Tracks'):
         # vst
@@ -64,7 +64,7 @@ def get_vst(root, sample_obj):
     return sample_obj
 
 
-def read_xrns(fname, tfilter):
+def read_xrns(fname, tfilter=[]):
     xfile = ""
     with zipfile.ZipFile(fname) as xrns:
         with xrns.open('Song.xml') as song:
@@ -74,7 +74,17 @@ def read_xrns(fname, tfilter):
     sample_obj = SampleList()
     sample_obj.fname = fname
 
-
+    if not tfilter:
+        sample_obj = read_samples(fname, sample_obj)
+        sample_obj = read_vsti(root, sample_obj)
+        sample_obj = read_vst(root, sample_obj)
+    else:
+        if 'samples' in tfilter:
+            sample_obj = read_samples(fname, sample_obj)
+        if 'vsti' in tfilter:
+            sample_obj = read_vsti(root, sample_obj)
+        if 'vst' in tfilter:
+            sample_obj = read_vst(root, sample_obj)
 
     return sample_obj
 
