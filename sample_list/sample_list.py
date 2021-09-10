@@ -26,7 +26,8 @@ def read_xrns(fname):
     sample_obj.fname = fname
 
     # vsti
-    for c in root[2].findall('Instrument'):
+    instrs = root.find('Instruments')
+    for c in instrs.findall('Instrument'):
         # vsti
         vsti = c.find('PluginGenerator').find('PluginDevice')
         if vsti:
@@ -52,6 +53,18 @@ def read_xrns(fname):
             # store info
             sample_obj.sample_name.append(samp_name)
             sample_obj.sample_hash.append(digest)
+
+    # vst
+    for c in root.find('Tracks'):
+        print(c)
+        # vst
+        vst = c.find('FilterDevices').find('AudioPluginDevice')
+        if vst:
+            name = vst.find('PluginDisplayName').text
+            chunk = vst.find('ParameterChunk').text
+            sample_obj.vst_name.append(name)
+            sample_obj.vst_chunk.append(chunk)
+
 
     return sample_obj
 
