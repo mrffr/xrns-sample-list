@@ -154,7 +154,7 @@ def compare_files(sample_ls):
 
 def main():
     parser = argparse.ArgumentParser(description='XRNS information tool.')
-    parser.add_argument('file', 
+    parser.add_argument('--file', 
             type=str, 
             nargs='+')
     parser.add_argument('--cmp', 
@@ -163,8 +163,8 @@ def main():
             action='store_true')
     parser.add_argument('--filter',
             dest='filter',
-            help='Filter to just check certain types. ex. vst vsti samples',
-            nargs='+')
+            help='Filter to just check certain types: vst vsti samples.',
+            nargs='*')
     args = parser.parse_args()
 
     # first get info for files
@@ -180,12 +180,15 @@ def main():
         for f in sample_ls:
             print('===============')
             print(f.fname)
-            print("===== Samples")
-            print('\n'.join(f.sample_name))
-            print("===== VSTI")
-            print('\n'.join(f.vsti_name))
-            print("===== VST")
-            print('\n'.join(f.vst_name))
+            if f.sample_name:
+                print("===== Samples")
+                print('\n'.join(f.sample_name))
+            if f.vsti_name:
+                print("===== VSTI")
+                print('\n'.join(f.vsti_name))
+            if f.vst_name:
+                print("===== VST")
+                print('\n'.join(f.vst_name))
 
 if __name__ == "__main__":
     main()
